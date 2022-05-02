@@ -47,6 +47,7 @@ const SigninScreen = ({navigation}) => {
       try {
         await dispatch(signin(formData)).unwrap();
         Alert.alert('Thành công', 'Đăng nhập thành công');
+        setFormData({});
       } catch (error) {
         Alert.alert('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
       }
@@ -76,6 +77,7 @@ const SigninScreen = ({navigation}) => {
               <FormControl.Label>Email:</FormControl.Label>
               <Input
                 placeholder="Nhập email"
+                value={formData.email}
                 onChangeText={value => setFormData({...formData, email: value})}
               />
               <FormControl.ErrorMessage>
@@ -88,6 +90,7 @@ const SigninScreen = ({navigation}) => {
               <Input
                 placeholder="Nhập mật khẩu"
                 type="password"
+                value={formData.password}
                 onChangeText={value =>
                   setFormData({...formData, password: value})
                 }

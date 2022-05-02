@@ -5,7 +5,6 @@
  * @format
  * @flow strict-local
  */
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NativeBaseProvider} from 'native-base';
@@ -15,7 +14,10 @@ import {PersistGate} from 'redux-persist/integration/react';
 import persistor, {store} from './src/redux/store';
 import SigninScreen from './src/screens/auth/SigninScreen';
 import SignupScreen from './src/screens/auth/SignupScreen';
+import CartScreen from './src/screens/cart/CartScreen';
 import MainScreen from './src/screens/MainScreen';
+import ProductDetailScreen from './src/screens/product/ProductDetailScreen';
+import SearchScreen from './src/screens/product/SearchScreen';
 import StartScreen from './src/screens/StartScreen';
 
 const Stack = createNativeStackNavigator();
@@ -35,11 +37,38 @@ const App = () => {
                 component={StartScreen}
               />
 
-              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen
+                name="Main"
+                options={{headerShown: false}}
+                component={MainScreen}
+              />
 
-              <Stack.Screen name="Signup" component={SignupScreen} />
+              <Stack.Screen
+                name="Signup"
+                options={{headerShown: false}}
+                component={SignupScreen}
+              />
 
-              <Stack.Screen name="Signin" component={SigninScreen} />
+              <Stack.Screen
+                name="Signin"
+                options={{headerShown: false}}
+                component={SigninScreen}
+              />
+
+              <Stack.Screen
+                name="ProductDetail"
+                component={ProductDetailScreen}
+              />
+
+              <Stack.Screen
+                name="Cart"
+                options={{
+                  title: 'Giỏ hàng của tôi',
+                }}
+                component={CartScreen}
+              />
+
+              <Stack.Screen name="StackSearch" component={SearchScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </NativeBaseProvider>

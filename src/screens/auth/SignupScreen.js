@@ -108,6 +108,7 @@ const SignupScreen = ({navigation}) => {
                 <FormControl.Label>Họ tên:</FormControl.Label>
                 <Input
                   placeholder="Nhập họ tên"
+                  value={formData.name}
                   onChangeText={value =>
                     setFormData({...formData, name: value})
                   }
@@ -121,6 +122,7 @@ const SignupScreen = ({navigation}) => {
                 <FormControl.Label>Email:</FormControl.Label>
                 <Input
                   placeholder="Nhập email"
+                  value={formData.email}
                   onChangeText={value =>
                     setFormData({...formData, email: value})
                   }
@@ -135,6 +137,7 @@ const SignupScreen = ({navigation}) => {
                 <Input
                   placeholder="Nhập mật khẩu"
                   type="password"
+                  value={formData.password}
                   onChangeText={value =>
                     setFormData({...formData, password: value})
                   }
@@ -149,6 +152,7 @@ const SignupScreen = ({navigation}) => {
                 <Input
                   placeholder="Nhập lại mật khẩu"
                   type="password"
+                  value={formData.confirm}
                   onChangeText={value =>
                     setFormData({...formData, confirm: value})
                   }

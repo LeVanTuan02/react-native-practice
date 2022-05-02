@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, View} from 'native-base';
-import {Dimensions, Box} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import {Box, Image} from 'native-base';
+import {Dimensions} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -23,27 +23,28 @@ const images = [
 
 const Banner = () => {
   return (
-    <View>
+    <Box mx={2} mt={2} mb={4} borderRadius={10}>
       <Carousel
         data={images}
-        autoplay
-        loop
+        sliderWidth={SCREEN_WIDTH - 16}
+        itemWidth={SCREEN_WIDTH - 16}
+        loop={true}
+        autoplay={true}
+        autoplayDelay={2000}
         inactiveSlideScale={1}
         renderItem={({item}) => {
           return (
             <Image
-              source={{uri: item.url}}
+              borderRadius={10}
               width={SCREEN_WIDTH}
               height={SCREEN_HEIGHT * 0.25}
-              alt={`Banner ${item.id}`}
+              source={{uri: item.url}}
+              alt={`Image ${item.id}`}
             />
           );
         }}
-        sliderWidth={SCREEN_WIDTH}
-        itemWidth={SCREEN_WIDTH}
-        enableSnap={true}
       />
-    </View>
+    </Box>
   );
 };
 
