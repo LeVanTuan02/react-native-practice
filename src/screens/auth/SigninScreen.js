@@ -17,7 +17,10 @@ import {signin} from '../../redux/authSlice';
 const SigninScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    email: 'khoint@gmail.com',
+    password: 'khoint',
+  });
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -48,6 +51,7 @@ const SigninScreen = ({navigation}) => {
         await dispatch(signin(formData)).unwrap();
         Alert.alert('Thành công', 'Đăng nhập thành công');
         setFormData({});
+        navigation.navigate('HomeDrawer');
       } catch (error) {
         Alert.alert('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
       }

@@ -8,11 +8,12 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../redux/authSlice';
 import CartScreen from './cart/CartScreen';
 import SearchScreen from './product/SearchScreen';
 import ProfileDashboardScreen from './profile/DashboardScreen';
+import {selectCart} from '../redux/cartSlice';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -22,15 +23,16 @@ const DrawerNavigation = () => {
 
   return (
     <Drawer.Navigator
+      initialRouteName="HomeDrawer"
       drawerContent={props => (
         <DrawerContentScrollView {...props}>
           <DrawerItemList {...props} />
-          <DrawerItem label="Logout" onPress={() => dispatch(logout())} />
+          <DrawerItem label="Đăng xuất" onPress={() => dispatch(logout())} />
         </DrawerContentScrollView>
       )}>
       <Drawer.Screen
-        name="Home"
-        options={{headerShown: false}}
+        name="HomeDrawer"
+        options={{headerShown: false, title: 'Trang chủ'}}
         component={HomeScreen}
       />
     </Drawer.Navigator>
@@ -38,6 +40,8 @@ const DrawerNavigation = () => {
 };
 
 const MainScreen = () => {
+  const cartList = useSelector(selectCart);
+
   return (
     <Tab.Navigator initialRouteName="MainTab">
       <Tab.Screen
@@ -47,7 +51,6 @@ const MainScreen = () => {
           tabBarIcon: ({color, size}) => {
             return <FontAwesome name="home" color={color} size={size} />;
           },
-          tabBarBadge: 3,
           headerShown: false,
         }}
         component={DrawerNavigation}
@@ -77,6 +80,7 @@ const MainScreen = () => {
           headerTitleAlign: 'center',
           title: 'Giỏ Hàng Của Tôi',
           tabBarLabel: 'Giỏ hàng',
+          tabBarBadge: cartList.length,
         }}
         component={CartScreen}
       />

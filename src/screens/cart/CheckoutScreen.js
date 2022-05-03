@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   HStack,
@@ -14,10 +14,21 @@ import {
 import {TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {formatCurrency} from '../../utils/string';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectUser} from '../../redux/authSlice';
+import {selectTotalPrice, selectCart, finishOrder} from '../../redux/cartSlice';
+import {add} from '../../api/cart';
+import {add as addCartDetail} from '../../api/cartDetail';
 
-const CheckoutScreen = () => {
+const CheckoutScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+
+  const userInfo = useSelector(selectUser);
+  const totalPrice = useSelector(selectTotalPrice);
+  const cartData = useSelector(selectCart);
 
   const validate = () => {
     let isValid = true;
@@ -77,14 +88,46 @@ const CheckoutScreen = () => {
     return isValid;
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const isValid = validate();
 
     if (isValid) {
-      console.log(formData);
-      Alert.alert('Thành công', 'Đặt hàng thành công');
+      try {
+        const {
+          data: {_id},
+        } = await add({
+          ...formData,
+          amount: totalPrice,
+          userId: userInfo._id,
+        });
+
+        cartData.forEach(async product => {
+          await addCartDetail({
+            cart: _id,
+            productName: product.name,
+            productImage: product.image,
+            productPrice: product.price,
+            quantity: product.quantity,
+          });
+        });
+
+        Alert.alert('Thành công', 'Đặt hàng thành công');
+        dispatch(finishOrder());
+        navigation.navigate('MyCart');
+      } catch (error) {
+        Alert.alert('Lỗi', 'Có lỗi xảy ra, vui lòng thử lại');
+      }
     }
   };
+
+  useEffect(() => {
+    setFormData({
+      name: userInfo.name,
+      email: userInfo.email,
+      address: userInfo.address,
+      phone: userInfo.phone,
+    });
+  }, [userInfo]);
 
   return (
     <Box flex={1} safeArea bgColor={'white'}>
@@ -112,7 +155,7 @@ const CheckoutScreen = () => {
                   </HStack>
 
                   <Text fontSize={'lg'} fontWeight={'bold'}>
-                    {formatCurrency(10789)}
+                    {formatCurrency(totalPrice)}
                   </Text>
                 </HStack>
               </Box>

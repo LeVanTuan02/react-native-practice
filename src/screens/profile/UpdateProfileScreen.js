@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Box,
@@ -15,16 +15,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import {useSelector} from 'react-redux';
+import {selectUser} from '../../redux/authSlice';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const cover =
-  'https://scontent.fhan16-1.fna.fbcdn.net/v/t39.30808-6/236286011_1457962851249533_6303255341345124771_n.png?_nc_cat=101&ccb=1-5&_nc_sid=e3f864&_nc_ohc=Oz0zP6R8XvQAX_GeHll&_nc_ht=scontent.fhan16-1.fna&oh=00_AT8jRzjC7kCeieeosRyLewijMO6V84SgxyYyP4gGQKd7Ag&oe=6276472E';
-const avatar =
-  'https://scontent.fhan16-1.fna.fbcdn.net/v/t1.6435-9/151005635_1337358523309967_1701712585753219712_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=w1I5E2u2q5oAX-8XwYO&_nc_ht=scontent.fhan16-1.fna&oh=00_AT_ZgZ5M4nzNO77l81urNTzXyvMwFX6LG5PWrMvAPOc_9w&oe=6297161B';
-
 const UpdateProfileScreen = ({navigation}) => {
+  const user = useSelector(selectUser);
+
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -94,6 +93,10 @@ const UpdateProfileScreen = ({navigation}) => {
     }
   };
 
+  useEffect(() => {
+    setFormData(user);
+  }, [user]);
+
   return (
     <Box flex={1} safeArea bgColor={'white'}>
       <ScrollView keyboardShouldPersistTaps={'always'}>
@@ -103,7 +106,7 @@ const UpdateProfileScreen = ({navigation}) => {
               <Box>
                 <Image
                   alt="Banner"
-                  source={{uri: cover}}
+                  source={{uri: user.cover}}
                   width={SCREEN_WIDTH}
                   height={SCREEN_HEIGHT * 0.25}
                 />
@@ -120,7 +123,7 @@ const UpdateProfileScreen = ({navigation}) => {
                   <Image
                     alt="Avatar"
                     rounded={'full'}
-                    source={{uri: avatar}}
+                    source={{uri: user.avatar}}
                     w={120}
                     h={120}
                     borderWidth={3}

@@ -3,9 +3,12 @@ import {Box, Heading, HStack, Icon} from 'native-base';
 import {TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectUser} from '../redux/authSlice';
 
 const Header = () => {
   const navigation = useNavigation();
+  const user = useSelector(selectUser);
 
   return (
     <Box mx={2} mt={3} mb={1}>
@@ -15,7 +18,7 @@ const Header = () => {
             <FontAwesome name="bars" size={25} color="black" />
           </TouchableOpacity>
           <Heading ml={2} size={'md'} textTransform={'uppercase'}>
-            TuanDemo
+            {user.name}
           </Heading>
         </HStack>
         <HStack>

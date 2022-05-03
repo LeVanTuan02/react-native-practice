@@ -1,23 +1,30 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box} from 'native-base';
 import SearchForm from '../../components/SearchBar';
 import SearchResult from '../../components/SearchResult';
+import {getAll, search} from '../../api/product';
 
 const SearchScreen = () => {
-  const [keyword, setKeyword] = useState('');
+  const [products, setProducts] = useState('');
 
-  const handleSearch = () => {
-    console.log(keyword);
+  const handleSearch = async keyword => {
+    const {data} = await search(keyword);
+    setProducts(data);
   };
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const {data} = await getAll();
+      setProducts(data);
+    };
+    getProducts();
+  }, []);
 
   return (
     <Box flex={1} bgColor={'white'}>
-      <SearchForm
-        onChange={value => setKeyword(value)}
-        onSubmit={handleSearch}
-      />
+      <SearchForm onChange={handleSearch} />
 
-      <SearchResult />
+      <SearchResult products={products} />
     </Box>
   );
 };

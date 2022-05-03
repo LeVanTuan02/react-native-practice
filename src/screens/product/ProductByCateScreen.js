@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   Box,
@@ -13,46 +13,33 @@ import {
 import {TouchableOpacity} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {formatCurrency} from '../../utils/string';
+import {get} from '../../api/category';
+import {getAll} from '../../api/product';
 
-const products = [
-  {
-    id: 1,
-    image:
-      'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/tsm5105-tra-8.jpg?v=1650966496000',
-    price: 25000,
-    name: 'Product A',
-  },
-  {
-    id: 2,
-    image:
-      'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/ao-polo-nam-vai-cafeapm3635-tna-qsm3026-ghi-3-yody-vn.jpg?v=1651042306000',
-    price: 58000,
-    name: 'Product B',
-  },
-  {
-    id: 3,
-    image:
-      'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/smm4073-tra-3.jpg?v=1641780163000',
-    price: 89999,
-    name: 'Product C',
-  },
-  {
-    id: 4,
-    image:
-      'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/scm4033-tit-3.jpg?v=1639968196000',
-    price: 89999,
-    name: 'Product D',
-  },
-  {
-    id: 5,
-    image:
-      'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/qjm3051-den-3333.jpg?v=1641803029000',
-    price: 67000,
-    name: 'Product E',
-  },
-];
+const ProductByCateScreen = ({navigation, route}) => {
+  const [products, setProducts] = useState([]);
+  const {id, title} = route.params;
 
-const ProductByCateScreen = ({navigation}) => {
+  useEffect(() => {
+    const getProduct = async () => {
+      const {data} = await get(id);
+      setProducts(data.products);
+    };
+
+    const getAllProduct = async () => {
+      const {data} = await getAll();
+      setProducts(data);
+    };
+
+    id ? getProduct() : getAllProduct();
+  }, [id]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      title,
+    });
+  }, [navigation, title]);
+
   return (
     <Box flex={1} bgColor={'white'}>
       <HStack
@@ -61,7 +48,7 @@ const ProductByCateScreen = ({navigation}) => {
         mx={2}
         my={3}>
         <Text fontSize={'md'} fontWeight={'medium'}>
-          7 Sản phẩm
+          {products.length} Sản phẩm
         </Text>
 
         <TouchableOpacity>
@@ -74,7 +61,11 @@ const ProductByCateScreen = ({navigation}) => {
           {products.map((item, index) => (
             <Box w={'1/2'} key={index} px={1} mb={2}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('ProductDetail')}>
+                onPress={() =>
+                  navigation.navigate('ProductDetail', {
+                    id: item._id,
+                  })
+                }>
                 <Image
                   source={{
                     uri: item.image,

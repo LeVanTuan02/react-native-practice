@@ -12,22 +12,26 @@ import {
 } from 'native-base';
 import {Dimensions, TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useSelector, useDispatch} from 'react-redux';
+import {logout, selectUser} from '../../redux/authSlice';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const cover =
-  'https://scontent.fhan16-1.fna.fbcdn.net/v/t39.30808-6/236286011_1457962851249533_6303255341345124771_n.png?_nc_cat=101&ccb=1-5&_nc_sid=e3f864&_nc_ohc=Oz0zP6R8XvQAX_GeHll&_nc_ht=scontent.fhan16-1.fna&oh=00_AT8jRzjC7kCeieeosRyLewijMO6V84SgxyYyP4gGQKd7Ag&oe=6276472E';
-const avatar =
-  'https://scontent.fhan16-1.fna.fbcdn.net/v/t1.6435-9/151005635_1337358523309967_1701712585753219712_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=w1I5E2u2q5oAX-8XwYO&_nc_ht=scontent.fhan16-1.fna&oh=00_AT_ZgZ5M4nzNO77l81urNTzXyvMwFX6LG5PWrMvAPOc_9w&oe=6297161B';
-
 const ProfileDashboardScreen = ({navigation}) => {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <Box flex={1} bgColor={'white'}>
       <Box>
         <Image
           alt="Banner"
-          source={{uri: cover}}
+          source={{uri: user.cover}}
           width={SCREEN_WIDTH}
           height={SCREEN_HEIGHT * 0.25}
         />
@@ -45,7 +49,7 @@ const ProfileDashboardScreen = ({navigation}) => {
             <Image
               alt="Avatar"
               rounded={'full'}
-              source={{uri: avatar}}
+              source={{uri: user.avatar}}
               w={120}
               h={120}
               borderColor={'white'}
@@ -61,7 +65,7 @@ const ProfileDashboardScreen = ({navigation}) => {
                     justifyContent={'space-between'}>
                     <Box>
                       <Heading fontSize={'xl'} fontWeight={'semibold'}>
-                        Lê Văn Tuân
+                        {user.name}
                       </Heading>
                       <Text color={'gray.500'}>Thông tin chi tiết</Text>
                     </Box>
@@ -83,7 +87,7 @@ const ProfileDashboardScreen = ({navigation}) => {
 
       <Box mx={2} mt={70}>
         <VStack>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('MyCart')}>
             <HStack py={2}>
               <Icon as={FontAwesome} name="shopping-cart" size={'lg'} />
               <Text fontSize={'md'} ml={2}>
@@ -124,7 +128,12 @@ const ProfileDashboardScreen = ({navigation}) => {
         </VStack>
       </Box>
 
-      <Button shadow={'1'} colorScheme={'red'} mt={3} mx={2}>
+      <Button
+        shadow={'1'}
+        colorScheme={'red'}
+        mt={3}
+        mx={2}
+        onPress={handleLogout}>
         ĐĂNG XUẤT
       </Button>
     </Box>

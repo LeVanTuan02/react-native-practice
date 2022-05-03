@@ -22,6 +22,11 @@ import {
 } from 'native-base';
 import {formatCurrency} from '../../utils/string';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {get} from '../../api/product';
+import {useDispatch} from 'react-redux';
+import 'react-native-get-random-values';
+import {addToCart} from '../../redux/cartSlice';
+import {v4 as uuidv4} from 'uuid';
 
 const images = [
   {
@@ -45,10 +50,14 @@ const images = [
 const SCREEN_WITH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const ProductDetailScreen = ({navigation}) => {
+const ProductDetailScreen = ({navigation, route}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [quantity, setQuantity] = useState('1');
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [product, setProduct] = useState({});
+  const dispatch = useDispatch();
+
+  const {id} = route.params;
 
   const renderItem = ({item}) => {
     return (
@@ -70,16 +79,30 @@ const ProductDetailScreen = ({navigation}) => {
       setIsShowKeyboard(false);
     });
 
+    const getProduct = async () => {
+      const {data} = await get(id);
+      images[0].url = data.image;
+      setProduct(data);
+    };
+    getProduct();
+
     return () => {
       keyboardShow.remove();
       keyboardHide.remove();
     };
-  }, []);
+  }, [id]);
 
   const handleAddCart = () => {
     if (isNaN(quantity) || +quantity <= 0) {
       Alert.alert('Có lỗi xảy ra', 'Vui lòng chọn lại số lượng SP');
     } else {
+      dispatch(
+        addToCart({
+          cartId: uuidv4(),
+          quantity,
+          ...product,
+        }),
+      );
       Alert.alert(
         'Thành công',
         'Đã thêm SP vào giỏ hàng. Bạn có muốn thanh toán không?',
@@ -131,11 +154,11 @@ const ProductDetailScreen = ({navigation}) => {
             </Box>
 
             <Heading size="md" mx={2} mt={3}>
-              Áo phông trơn
+              {product?.name}
             </Heading>
 
             <Text fontWeight={'bold'} fontSize={'lg'} mx={2}>
-              {formatCurrency(10000)}
+              {formatCurrency(product?.price || 0)}
             </Text>
 
             <HStack mx={2} mt={3} alignItems={'center'}>
@@ -211,8 +234,7 @@ const ProductDetailScreen = ({navigation}) => {
 
             <Box mx={2} mb={2}>
               <Text>Mô tả</Text>
-              <Text>- Rất okela</Text>
-              <Text>- Chất liệu thoáng mát</Text>
+              <Text>- {product.description}</Text>
             </Box>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>

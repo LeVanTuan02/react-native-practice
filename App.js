@@ -14,12 +14,13 @@ import {PersistGate} from 'redux-persist/integration/react';
 import persistor, {store} from './src/redux/store';
 import SigninScreen from './src/screens/auth/SigninScreen';
 import SignupScreen from './src/screens/auth/SignupScreen';
-import CartScreen from './src/screens/cart/CartScreen';
 import CheckoutScreen from './src/screens/cart/CheckoutScreen';
 import MainScreen from './src/screens/MainScreen';
+import MyCartScreen from './src/screens/product/MyCartScreen';
 import ProductByCateScreen from './src/screens/product/ProductByCateScreen';
 import ProductDetailScreen from './src/screens/product/ProductDetailScreen';
 import SearchScreen from './src/screens/product/SearchScreen';
+import CartDetailScreen from './src/screens/profile/CartDetailScreen';
 import UpdateProfileScreen from './src/screens/profile/UpdateProfileScreen';
 import StartScreen from './src/screens/StartScreen';
 
@@ -60,15 +61,10 @@ const App = () => {
 
               <Stack.Screen
                 name="ProductDetail"
-                component={ProductDetailScreen}
-              />
-
-              <Stack.Screen
-                name="Cart"
                 options={{
-                  title: 'Giỏ hàng của tôi',
+                  title: 'Chi tiết sản phẩm',
                 }}
-                component={CartScreen}
+                component={ProductDetailScreen}
               />
 
               <Stack.Screen name="StackSearch" component={SearchScreen} />
@@ -90,6 +86,20 @@ const App = () => {
                   title: 'Cập nhật tài khoản',
                 }}
                 component={UpdateProfileScreen}
+              />
+
+              <Stack.Screen
+                name="MyCart"
+                options={{title: 'Đơn hàng của tôi'}}
+                component={MyCartScreen}
+              />
+
+              <Stack.Screen
+                name="CartDetail"
+                options={{
+                  title: 'Chi tiết đơn hàng',
+                }}
+                component={CartDetailScreen}
               />
             </Stack.Navigator>
           </NavigationContainer>
