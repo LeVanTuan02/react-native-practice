@@ -51,7 +51,11 @@ const cartData = [
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const CartScreen = () => {
+const CartScreen = ({navigation}) => {
+  const handleCheckout = () => {
+    navigation.navigate('Checkout');
+  };
+
   return (
     <>
       <Box flex={1} bgColor={'white'}>
@@ -128,7 +132,12 @@ const CartScreen = () => {
             </Text>
           </HStack>
 
-          <Button mx={2} mb={4} colorScheme={'red'}>
+          <Button
+            shadow={'1'}
+            mx={2}
+            mb={4}
+            colorScheme={'red'}
+            onPress={handleCheckout}>
             TIẾN HÀNH ĐẶT HÀNG
           </Button>
         </ScrollView>

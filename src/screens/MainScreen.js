@@ -1,6 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import SigninScreen from './auth/SigninScreen';
 import HomeScreen from './HomeScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
@@ -13,6 +12,7 @@ import {useDispatch} from 'react-redux';
 import {logout} from '../redux/authSlice';
 import CartScreen from './cart/CartScreen';
 import SearchScreen from './product/SearchScreen';
+import ProfileDashboardScreen from './profile/DashboardScreen';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -82,14 +82,15 @@ const MainScreen = () => {
       />
 
       <Tab.Screen
-        name="Signin"
+        name="Profile"
         options={{
           tabBarIcon: ({color, size}) => {
             return <FontAwesome name="user" color={color} size={size} />;
           },
+          headerShown: false,
           title: 'Tài khoản',
         }}
-        component={SigninScreen}
+        component={ProfileDashboardScreen}
       />
     </Tab.Navigator>
   );

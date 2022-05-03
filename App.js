@@ -15,9 +15,12 @@ import persistor, {store} from './src/redux/store';
 import SigninScreen from './src/screens/auth/SigninScreen';
 import SignupScreen from './src/screens/auth/SignupScreen';
 import CartScreen from './src/screens/cart/CartScreen';
+import CheckoutScreen from './src/screens/cart/CheckoutScreen';
 import MainScreen from './src/screens/MainScreen';
+import ProductByCateScreen from './src/screens/product/ProductByCateScreen';
 import ProductDetailScreen from './src/screens/product/ProductDetailScreen';
 import SearchScreen from './src/screens/product/SearchScreen';
+import UpdateProfileScreen from './src/screens/profile/UpdateProfileScreen';
 import StartScreen from './src/screens/StartScreen';
 
 const Stack = createNativeStackNavigator();
@@ -69,6 +72,25 @@ const App = () => {
               />
 
               <Stack.Screen name="StackSearch" component={SearchScreen} />
+
+              <Stack.Screen
+                name="Checkout"
+                options={{title: 'Thanh toán'}}
+                component={CheckoutScreen}
+              />
+
+              <Stack.Screen
+                name="ProductByCate"
+                component={ProductByCateScreen}
+              />
+
+              <Stack.Screen
+                name="UpdateProfile"
+                options={{
+                  title: 'Cập nhật tài khoản',
+                }}
+                component={UpdateProfileScreen}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </NativeBaseProvider>

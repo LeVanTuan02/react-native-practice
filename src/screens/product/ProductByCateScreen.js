@@ -1,9 +1,18 @@
-import React, {memo} from 'react';
+import React from 'react';
+import {
+  Text,
+  Box,
+  ScrollView,
+  HStack,
+  Icon,
+  Flex,
+  Image,
+  Heading,
+  VStack,
+} from 'native-base';
 import {TouchableOpacity} from 'react-native';
-import {Box, Heading, HStack, Text, Image, VStack, Flex} from 'native-base';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {formatCurrency} from '../utils/string';
-import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {formatCurrency} from '../../utils/string';
 
 const products = [
   {
@@ -43,28 +52,26 @@ const products = [
   },
 ];
 
-const ProductItem = ({title}) => {
-  const navigation = useNavigation();
-
+const ProductByCateScreen = ({navigation}) => {
   return (
-    <>
-      <Box mb={2}>
-        <HStack justifyContent={'space-between'} mx={2} mb={2}>
-          <Heading size={'md'} textTransform={'uppercase'}>
-            {title}
-          </Heading>
+    <Box flex={1} bgColor={'white'}>
+      <HStack
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        mx={2}
+        my={3}>
+        <Text fontSize={'md'} fontWeight={'medium'}>
+          7 Sản phẩm
+        </Text>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ProductByCate')}>
-            <HStack alignItems={'center'}>
-              <Text marginRight={1}>Xem tất cả</Text>
-              <FontAwesome name="angle-right" size={14} />
-            </HStack>
-          </TouchableOpacity>
-        </HStack>
+        <TouchableOpacity>
+          <Icon as={AntDesign} name="filter" size={'lg'} color={'black'} />
+        </TouchableOpacity>
+      </HStack>
 
+      <ScrollView>
         <Flex direction="row" flexWrap={'wrap'} mx={1}>
-          {products.slice(0, 2).map((item, index) => (
+          {products.map((item, index) => (
             <Box w={'1/2'} key={index} px={1} mb={2}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ProductDetail')}>
@@ -92,9 +99,9 @@ const ProductItem = ({title}) => {
             </Box>
           ))}
         </Flex>
-      </Box>
-    </>
+      </ScrollView>
+    </Box>
   );
 };
 
-export default memo(ProductItem);
+export default ProductByCateScreen;

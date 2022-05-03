@@ -63,7 +63,10 @@ const SigninScreen = ({navigation}) => {
         flex={1}
         justifyContent={'center'}>
         <KeyboardAvoidingView flex={1} justifyContent={'center'}>
-          <Pressable onPress={() => Keyboard.dismiss()}>
+          <Pressable
+            flex={1}
+            justifyContent={'center'}
+            onPress={() => Keyboard.dismiss()}>
             <Heading
               textAlign={'center'}
               textTransform={'uppercase'}

@@ -54,7 +54,7 @@ const SearchResult = () => {
       <HStack>
         <Image
           width={SCREEN_WIDTH * 0.25}
-          height={150}
+          height={120}
           alt={`Image ${item.name}`}
           source={{uri: item.image}}
         />

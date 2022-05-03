@@ -86,7 +86,10 @@ const ProductDetailScreen = ({navigation}) => {
         [
           {
             text: 'Tới giỏ hàng',
-            onPress: () => navigation.navigate('Cart'),
+            onPress: () => {
+              navigation.navigate('Cart');
+              setQuantity('1');
+            },
           },
           {
             text: 'Ở lại',
@@ -197,8 +200,13 @@ const ProductDetailScreen = ({navigation}) => {
               </HStack>
             </HStack>
 
-            <Button mx={2} my={4} colorScheme={'red'} onPress={handleAddCart}>
-              Thêm vào giỏ hàng
+            <Button
+              mx={2}
+              my={4}
+              shadow={'1'}
+              colorScheme={'red'}
+              onPress={handleAddCart}>
+              THÊM VÀO GIỎ HÀNG
             </Button>
 
             <Box mx={2} mb={2}>
