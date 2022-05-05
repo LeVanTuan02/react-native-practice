@@ -17,10 +17,7 @@ import {signin} from '../../redux/authSlice';
 const SigninScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
-    email: 'khoint@gmail.com',
-    password: 'khoint',
-  });
+  const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
   const validate = () => {

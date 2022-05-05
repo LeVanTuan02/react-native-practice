@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Button,
   Box,
@@ -8,15 +8,19 @@ import {
   Input,
   ScrollView,
   KeyboardAvoidingView,
+  VStack,
 } from 'native-base';
 import {
   Dimensions,
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {selectUser} from '../../redux/authSlice';
+import {Modalize} from 'react-native-modalize';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -26,6 +30,9 @@ const UpdateProfileScreen = ({navigation}) => {
 
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+  const [modalName, setModalName] = useState('');
+
+  const modalizeRef = useRef();
 
   const validate = () => {
     let isValid = true;
@@ -85,12 +92,59 @@ const UpdateProfileScreen = ({navigation}) => {
     return isValid;
   };
 
-  const handleUpdate = () => {
+  const handleTakePhoto = async () => {
+    handleCloseModal();
+    const result = await launchCamera({
+      mediaType: 'photo',
+    });
+
+    if (!result.didCancel) {
+      const [file] = result.assets;
+
+      const field = modalName === 'avatar' ? 'avatar' : 'cover';
+      setFormData(prev => ({
+        ...prev,
+        [`${field}Preview`]: file.uri,
+        [field]: file,
+      }));
+    }
+  };
+
+  const handleChooseImage = async () => {
+    handleCloseModal();
+
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+    });
+
+    if (!result.didCancel) {
+      const [file] = result.assets;
+
+      const field = modalName === 'avatar' ? 'avatar' : 'cover';
+      setFormData(prev => ({
+        ...prev,
+        [`${field}Preview`]: file.uri,
+        [field]: file,
+      }));
+    }
+  };
+
+  const handleUpdate = async () => {
     const isValid = validate();
 
     if (isValid) {
+      console.log(formData);
       Alert.alert('Thành công', 'Cập nhật thành công');
     }
+  };
+
+  const handleOpenModal = modal => {
+    setModalName(modal);
+    modalizeRef.current.open();
+  };
+
+  const handleCloseModal = () => {
+    modalizeRef.current.close();
   };
 
   useEffect(() => {
@@ -104,32 +158,36 @@ const UpdateProfileScreen = ({navigation}) => {
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <Box>
               <Box>
-                <Image
-                  alt="Banner"
-                  source={{uri: user.cover}}
-                  width={SCREEN_WIDTH}
-                  height={SCREEN_HEIGHT * 0.25}
-                />
-
-                <Box
-                  mx={2}
-                  position={'absolute'}
-                  bottom={0}
-                  right={0}
-                  left={SCREEN_WIDTH / 2}
-                  style={{
-                    transform: [{translateY: 60}, {translateX: -63}],
-                  }}>
+                <TouchableOpacity onPress={() => handleOpenModal('cover')}>
                   <Image
-                    alt="Avatar"
-                    rounded={'full'}
-                    source={{uri: user.avatar}}
-                    w={120}
-                    h={120}
-                    borderWidth={3}
-                    borderColor={'white'}
+                    alt="Banner"
+                    source={{uri: formData.coverPreview || user.cover}}
+                    width={SCREEN_WIDTH}
+                    height={SCREEN_HEIGHT * 0.25}
                   />
-                </Box>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleOpenModal('avatar')}>
+                  <Box
+                    mx={2}
+                    position={'absolute'}
+                    bottom={0}
+                    right={0}
+                    left={SCREEN_WIDTH / 2}
+                    style={{
+                      transform: [{translateY: 60}, {translateX: -63}],
+                    }}>
+                    <Image
+                      alt="Avatar"
+                      rounded={'full'}
+                      source={{uri: formData.avatarPreview || user.avatar}}
+                      w={120}
+                      h={120}
+                      borderWidth={3}
+                      borderColor={'white'}
+                    />
+                  </Box>
+                </TouchableOpacity>
               </Box>
 
               <Box mx={2} mt={60}>
@@ -206,6 +264,28 @@ const UpdateProfileScreen = ({navigation}) => {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </ScrollView>
+
+      <Modalize
+        ref={modalizeRef}
+        adjustToContentHeight
+        closeOnOverlayTap={true}>
+        <Box minH={120} px={2} py={5}>
+          <VStack space={3} alignItems={'center'}>
+            <Button width={'5/6'} onPress={handleTakePhoto}>
+              Take a photo
+            </Button>
+            <Button width={'5/6'} onPress={handleChooseImage}>
+              Choose from library
+            </Button>
+            <Button
+              width={'5/6'}
+              colorScheme={'red'}
+              onPress={handleCloseModal}>
+              Cancel
+            </Button>
+          </VStack>
+        </Box>
+      </Modalize>
     </Box>
   );
 };
